@@ -5,7 +5,7 @@ require "recurring_select/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "recurring_select"
+  s.name        = "recurring_select_ionleaks"
   s.version     = RecurringSelect::VERSION
   s.authors     = ["Jobber", "Forrest Zeisler", "Nathan Youngman"]
   s.email       = ["forrest@getjobber.com"]
