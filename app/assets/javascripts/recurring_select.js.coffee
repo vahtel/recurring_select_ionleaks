@@ -86,6 +86,7 @@ $.fn.recurring_select.texts = {
   frequency: "Frequency"
   daily: "Daily"
   weekly: "Weekly"
+  hour: "Hour"
   monthly: "Monthly"
   yearly: "Yearly"
   every: "Every"

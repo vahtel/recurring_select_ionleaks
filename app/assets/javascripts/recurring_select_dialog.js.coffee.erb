@@ -74,6 +74,7 @@ window.RecurringSelectDialog =
     freqInit: ->
       @freq_select = @outer_holder.find ".rs_frequency"
       if @current_rule.hash? && (rule_type = @current_rule.hash.rule_type)?
+        @initHourlyOptions()
         if rule_type.search(/Weekly/) != -1
           @freq_select.prop('selectedIndex', 1)
           @initWeeklyOptions()
@@ -92,6 +93,15 @@ window.RecurringSelectDialog =
       interval_input = section.find('.rs_daily_interval')
       interval_input.val(@current_rule.hash.interval)
       interval_input.on "change keyup", @intervalChanged
+      section.show()
+
+    initHourlyOptions: ->
+      section = @content.find('.hourly_options')
+      interval_input = section.find('.rs_hour')
+      interval_input.val(@current_rule.hash.base_hour || "7")
+      #interval_input.on "change keyup", @intervalChanged
+      section.on 'change', '.rs_hour_interval', @hourChanged
+      section.on 'change', '.rs_minute_interval', @hourChanged
       section.show()
 
     initWeeklyOptions: ->
@@ -249,6 +259,7 @@ window.RecurringSelectDialog =
           @current_rule.hash.rule_type = "IceCube::DailyRule"
           @current_rule.str = $.fn.recurring_select.texts["daily"]
           @initDailyOptions()
+      @initHourlyOptions()
       @summaryUpdate()
       @positionDialogVert()
 
@@ -258,6 +269,7 @@ window.RecurringSelectDialog =
       @current_rule.hash.interval = parseInt($(event.currentTarget).val())
       if @current_rule.hash.interval < 1 || isNaN(@current_rule.hash.interval)
         @current_rule.hash.interval = 1
+      @hourChanged()
       @summaryUpdate()
 
     daysChanged: (event) =>
@@ -267,8 +279,20 @@ window.RecurringSelectDialog =
       @current_rule.hash.validations = {}
       raw_days = @content.find(".day_holder a.selected").map -> parseInt($(this).data("value"))
       @current_rule.hash.validations.day = raw_days.get()
+      @hourChanged()
       @summaryUpdate()
       false # this prevents default and propogation
+
+    hourChanged: (event = null) =>
+      if event
+        @current_rule.str = null
+        @current_rule.hash ||= {}
+        @current_rule.hash.validations ||= {}
+      raw_hours = @content.find(".rs_hour_interval").val()
+      @current_rule.hash.validations.hour_of_day = parseInt(raw_hours)
+      raw_minutes = @content.find(".rs_minute_interval").val()
+      @current_rule.hash.validations.minute_of_hour = parseInt(raw_minutes)
+      @summaryUpdate() if event
 
     dateOfMonthChanged: (event) =>
       $(event.currentTarget).toggleClass("selected")
@@ -280,6 +304,7 @@ window.RecurringSelectDialog =
         res
       @current_rule.hash.validations.day_of_week = {}
       @current_rule.hash.validations.day_of_month = raw_days.get()
+      @hourChanged()
       @summaryUpdate()
       false
 
@@ -295,6 +320,7 @@ window.RecurringSelectDialog =
         instance = parseInt($(elm).attr("instance"))
         @current_rule.hash.validations.day_of_week[day] ||= []
         @current_rule.hash.validations.day_of_week[day].push instance
+      @hourChanged()
       @summaryUpdate()
       false
 
@@ -312,7 +338,6 @@ window.RecurringSelectDialog =
                 <option value='Daily'>#{$.fn.recurring_select.texts["daily"]}</option>
                 <option value='Weekly'>#{$.fn.recurring_select.texts["weekly"]}</option>
                 <option value='Monthly'>#{$.fn.recurring_select.texts["monthly"]}</option>
-                <option value='Yearly'>#{$.fn.recurring_select.texts["yearly"]}</option>
               </select>
             </p>
 
@@ -338,6 +363,40 @@ window.RecurringSelectDialog =
       str += "
               </div>
               <span style='clear:both; visibility:hidden; height:1px;'>.</span>
+            </div>
+            <div class='hourly_options freq_option_section'>
+              <p>
+                #{$.fn.recurring_select.texts["hour"]}
+                <select type='text' data-wrapper-class='ui-recurring-select' name='rs_hour' class='rs_hour_interval'>"
+      i = 0
+
+      while i < 24 
+        if i < 12
+          if i == 0
+            str += '<option value=\'' + i + '\'>12 am</option>'
+          else
+            str += '<option value=\'' + i + '\'>' + i + ' am</option>'
+        else
+          if i == 12 
+            str += '<option value=\'' + i + '\'>' + 12 + ' pm</option>'
+          else
+            str += '<option value=\'' + i + '\'>' + (i-12) + ' pm</option>'
+        i++
+
+      str += "
+                </select>
+                <select type='text' data-wrapper-class='ui-recurring-select' name='rs_minute' class='rs_minute_interval'>"
+      i = 0
+      while i < 60 
+        if i < 10
+          str += '<option value=\'' + i + '\'>0' + i + '</option>'
+        else
+          str += '<option value=\'' + i + '\'>' + i + '</option>'
+        i++
+
+      str += "
+                </select>
+              </p>
             </div>
             <div class='monthly_options freq_option_section'>
               <p>

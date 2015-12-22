@@ -41,6 +41,7 @@ module RecurringSelect
   private
 
   def self.filter_params(params)
+
     params.reject!{|key, value| value.blank? || value=="null" }
 
     params[:interval] = params[:interval].to_i if params[:interval]
@@ -56,6 +57,15 @@ module RecurringSelect
     if params[:validations][:day_of_month]
       params[:validations][:day_of_month] = params[:validations][:day_of_month].collect(&:to_i)
     end
+
+    if params[:validations][:hour_of_day]
+      params[:validations][:hour_of_day] = params[:validations][:hour_of_day].to_i
+    end
+
+    if params[:validations][:minute_of_hour]
+      params[:validations][:minute_of_hour] = params[:validations][:minute_of_hour].to_i
+    end
+
 
     # this is soooooo ugly
     if params[:validations][:day_of_week]

@@ -45,6 +45,8 @@ select {
       .freq_option_section { display:none;
         label { font-weight: bold; }
         .rs_interval {width:30px; text-align:center; display: inline-block;}
+        .rs_hour_interval {width:60px;}
+        .rs_minute_interval {width:60px;}
 
         .day_holder { border-left:1px solid #ccc; position:relative; margin-top:5px; height:26px;
           a {display:block; padding:5px 7px; font-size:14px; border-style:solid; border-color:#ccc; border-width:1px 1px 1px 0px; float:left; text-decoration:none; font-weight:bold; @include inset_shadows(0px, 1px, 2px, rgba(0,0,0,0.1)); background-color:#fff;;
