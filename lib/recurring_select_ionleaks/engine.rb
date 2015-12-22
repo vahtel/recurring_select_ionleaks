@@ -1,4 +1,4 @@
-module RecurringSelect
+module RecurringSelectIonleaks 
   class Engine < Rails::Engine
     
     initializer "recurring_select.extending_form_builder" do |app|
