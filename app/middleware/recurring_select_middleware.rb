@@ -15,7 +15,7 @@ class RecurringSelectMiddleware
       params.symbolize_keys!
 
       if params and params[:rule_type]
-        rule = RecurringSelect.dirty_hash_to_rule(params)
+        rule = RecurringSelectIonleaks.dirty_hash_to_rule(params)
         [200, {"Content-Type" => "text/html"}, [rule.to_s]]
       else
         [200, {"Content-Type" => "text/html"}, [""]]
