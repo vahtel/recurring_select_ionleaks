@@ -3,23 +3,23 @@ require "ice_cube"
 module RecurringSelectHelper
   module FormHelper
     if Rails::VERSION::MAJOR == 4
-      def select_recurring(object, method, default_schedules = nil, options = {}, html_options = {})
+      def select_recurring_schedule(object, method, default_schedules = nil, options = {}, html_options = {})
         RecurringSelectTag.new(object, method, self, default_schedules, options, html_options).render
       end
     elsif Rails::VERSION::MAJOR == 3
-      def select_recurring(object, method, default_schedules = nil, options = {}, html_options = {})
+      def select_recurring_schedule(object, method, default_schedules = nil, options = {}, html_options = {})
         InstanceTag.new(object, method, self, options.delete(:object)).to_recurring_select_tag(default_schedules, options, html_options)
       end
     end
   end
 
   module FormBuilder
-    def select_recurring(method, default_schedules = nil, options = {}, html_options = {})
-      if !@template.respond_to?(:select_recurring)
+    def select_recurring_schedule(method, default_schedules = nil, options = {}, html_options = {})
+      if !@template.respond_to?(:select_recurring_schedule)
         @template.class.send(:include, RecurringSelectHelper::FormHelper)
       end
 
-      @template.select_recurring(@object_name, method, default_schedules, options.merge(:object => @object), html_options)
+      @template.select_recurring_schedule(@object_name, method, default_schedules, options.merge(:object => @object), html_options)
     end
   end
 
