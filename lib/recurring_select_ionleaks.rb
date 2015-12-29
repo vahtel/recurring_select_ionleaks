@@ -19,6 +19,19 @@ module RecurringSelectIonleaks
     end
   end
 
+  def self.clean_english_rule(rule)
+    hour = convert_to_am_or_pm(rule.validations[:hour_of_day].first.try(:hour))
+    minute = format('%02d', rule.validations[:minute_of_hour].first.try(:minute))
+
+    split_time_string = rule.to_s.split(/on the \d(th|rd|st) hour/)
+    if split_time_string.count == 1
+      split_time_string = rule.to_s.split(/on the \d\d(th|rd|st) hour/)
+    end
+    beginning_of_string = split_time_string.first
+
+    return "#{beginning_of_string} at #{hour[0]}:#{minute}#{hour[1]}"
+  end
+
   def self.is_valid_rule?(possible_rule)
     return true if possible_rule.is_a?(IceCube::Rule)
     return false if possible_rule.blank?
@@ -89,5 +102,21 @@ module RecurringSelectIonleaks
     end
 
     params
+  end
+
+  def self.convert_to_am_or_pm(digit)
+    if digit < 12
+      if digit == 0
+        [12, "am"]
+      else
+        [digit, "am"]
+      end
+    else
+      if digit == 12 
+        [12, "pm"]
+      else
+        [digit-12, "pm"]
+      end
+    end
   end
 end

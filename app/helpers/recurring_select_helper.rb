@@ -68,7 +68,7 @@ module RecurringSelectHelper
       return supplied_rule unless RecurringSelectIonleaks.is_valid_rule?(supplied_rule)
 
       rule = RecurringSelectIonleaks.dirty_hash_to_rule(supplied_rule)
-      ar = [rule.to_s, rule.to_hash.to_json]
+      ar = [RecurringSelectIonleaks.clean_english_rule(rule), rule.to_hash.to_json]
 
       if custom
         ar[0] << "*"

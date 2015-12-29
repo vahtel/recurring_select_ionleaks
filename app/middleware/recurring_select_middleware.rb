@@ -13,10 +13,10 @@ class RecurringSelectMiddleware
       request = Rack::Request.new(env)
       params = request.params
       params.symbolize_keys!
-
+      
       if params and params[:rule_type]
         rule = RecurringSelectIonleaks.dirty_hash_to_rule(params)
-        [200, {"Content-Type" => "text/html"}, [rule.to_s]]
+        [200, {"Content-Type" => "text/html"}, [RecurringSelectIonleaks.clean_english_rule(rule)]]
       else
         [200, {"Content-Type" => "text/html"}, [""]]
       end
@@ -24,5 +24,6 @@ class RecurringSelectMiddleware
       @app.call(env)
     end
   end
+
 
 end
