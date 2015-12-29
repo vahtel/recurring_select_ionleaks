@@ -23,9 +23,9 @@ module RecurringSelectIonleaks
     hour = convert_to_am_or_pm(rule.validations[:hour_of_day].first.try(:hour))
     minute = format('%02d', rule.validations[:minute_of_hour].first.try(:minute))
 
-    split_time_string = rule.to_s.split(/on the \d(th|rd|st) hour/)
+    split_time_string = rule.to_s.split(/on the \d(th|rd|st|nd) hour/)
     if split_time_string.count == 1
-      split_time_string = rule.to_s.split(/on the \d\d(th|rd|st) hour/)
+      split_time_string = rule.to_s.split(/on the \d\d(th|rd|st|nd) hour/)
     end
     beginning_of_string = split_time_string.first
 
