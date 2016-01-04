@@ -20,14 +20,14 @@ module RecurringSelectIonleaks
   end
 
   def self.clean_english_rule(rule)
-    hour = convert_to_am_or_pm(rule.validations[:hour_of_day].first.try(:hour))
-    minute = format('%02d', rule.validations[:minute_of_hour].first.try(:minute))
+    hour = convert_to_am_or_pm(rule.validations[:hour_of_day].try(:first).try(:hour) || 0)
+    minute = format('%02d', rule.validations[:minute_of_hour].try(:first).try(:minute) || 0)
 
     split_time_string = rule.to_s.split(/on the \d(th|rd|st|nd) hour/)
     if split_time_string.count == 1
       split_time_string = rule.to_s.split(/on the \d\d(th|rd|st|nd) hour/)
     end
-    beginning_of_string = split_time_string.first
+    beginning_of_string = split_time_string.try(:first)
 
     return "#{beginning_of_string} at #{hour[0]}:#{minute}#{hour[1]}"
   end
