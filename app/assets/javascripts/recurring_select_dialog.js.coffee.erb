@@ -98,7 +98,17 @@ window.RecurringSelectDialog =
     initHourlyOptions: ->
       section = @content.find('.hourly_options')
       interval_input = section.find('.rs_hour')
-      interval_input.val(@current_rule.hash.base_hour || "7")
+      if !@current_rule.hash.validations || @current_rule.hash.validations.hour_of_day[0] == undefined 
+        base_hour = 7 
+      else
+        base_hour = @current_rule.hash.validations.hour_of_day[0]
+
+      if !@current_rule.hash.validations || @current_rule.hash.validations.minute_of_hour[0] == undefined 
+        base_minute = 0 
+      else
+        base_minute = @current_rule.hash.validations.minute_of_hour[0]
+      section.find('.rs_hour_interval').prop('selectedIndex', base_hour)
+      section.find('.rs_minute_interval').prop('selectedIndex', base_minute)
       #interval_input.on "change keyup", @intervalChanged
       section.on 'change', '.rs_hour_interval', @hourChanged
       section.on 'change', '.rs_minute_interval', @hourChanged
