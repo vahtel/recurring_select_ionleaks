@@ -99,7 +99,7 @@ window.RecurringSelectDialog =
       section = @content.find('.hourly_options')
       interval_input = section.find('.rs_hour')
       if !@current_rule.hash.validations || @current_rule.hash.validations.hour_of_day[0] == undefined 
-        base_hour = 7 
+        base_hour = 0 
       else
         base_hour = @current_rule.hash.validations.hour_of_day[0]
 
