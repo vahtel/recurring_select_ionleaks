@@ -98,12 +98,12 @@ window.RecurringSelectDialog =
     initHourlyOptions: ->
       section = @content.find('.hourly_options')
       interval_input = section.find('.rs_hour')
-      if !@current_rule.hash.validations || @current_rule.hash.validations.hour_of_day[0] == undefined 
+      if !@current_rule.hash.validations || @current_rule.hash.validations.hour_of_day == undefined 
         base_hour = 0 
       else
         base_hour = @current_rule.hash.validations.hour_of_day[0]
 
-      if !@current_rule.hash.validations || @current_rule.hash.validations.minute_of_hour[0] == undefined 
+      if !@current_rule.hash.validations || @current_rule.hash.validations.minute_of_hour == undefined 
         base_minute = 0 
       else
         base_minute = @current_rule.hash.validations.minute_of_hour[0]
@@ -152,6 +152,7 @@ window.RecurringSelectDialog =
       section.find(".monthly_rule_type_day").prop("checked", !in_week_mode)
       @toggle_month_view()
       section.find("input[name=monthly_rule_type]").on "change", @toggle_month_view
+      @initHourlyOptions()
       section.show()
 
     initYearlyOptions: ->
@@ -373,7 +374,29 @@ window.RecurringSelectDialog =
       str += "
               </div>
               <span style='clear:both; visibility:hidden; height:1px;'>.</span>
+            </div>"
+      str += "
+            <div class='monthly_options freq_option_section'>
+              <p>
+                #{$.fn.recurring_select.texts["every"]}
+                <input type='text' data-wrapper-class='ui-recurring-select' name='rs_monthly_interval' class='rs_monthly_interval rs_interval' value='1' size='2' />
+                #{$.fn.recurring_select.texts["months"]}:
+              </p>
+              <p class='monthly_rule_type'>
+                <span><label for='monthly_rule_type_day'>#{$.fn.recurring_select.texts["day_of_month"]}</label><input type='radio' class='monthly_rule_type_day' name='monthly_rule_type' id='monthly_rule_type_day' value='true' /></span>
+                <span><label for='monthly_rule_type_week'>#{$.fn.recurring_select.texts["day_of_week"]}</label><input type='radio' class='monthly_rule_type_week' name='monthly_rule_type' id='monthly_rule_type_week' value='true' /></span>
+              </p>
+              <p class='rs_calendar_day'></p>
+              <p class='rs_calendar_week'></p>
             </div>
+            <div class='yearly_options freq_option_section'>
+              <p>
+                #{$.fn.recurring_select.texts["every"]}
+                <input type='text' data-wrapper-class='ui-recurring-select' name='rs_yearly_interval' class='rs_yearly_interval rs_interval' value='1' size='2' />
+                #{$.fn.recurring_select.texts["years"]}
+              </p>
+            </div>"
+      str += "
             <div class='hourly_options freq_option_section'>
               <p>
                 #{$.fn.recurring_select.texts["hour"]}
@@ -407,27 +430,8 @@ window.RecurringSelectDialog =
       str += "
                 </select>
               </p>
-            </div>
-            <div class='monthly_options freq_option_section'>
-              <p>
-                #{$.fn.recurring_select.texts["every"]}
-                <input type='text' data-wrapper-class='ui-recurring-select' name='rs_monthly_interval' class='rs_monthly_interval rs_interval' value='1' size='2' />
-                #{$.fn.recurring_select.texts["months"]}:
-              </p>
-              <p class='monthly_rule_type'>
-                <span><label for='monthly_rule_type_day'>#{$.fn.recurring_select.texts["day_of_month"]}</label><input type='radio' class='monthly_rule_type_day' name='monthly_rule_type' id='monthly_rule_type_day' value='true' /></span>
-                <span><label for='monthly_rule_type_week'>#{$.fn.recurring_select.texts["day_of_week"]}</label><input type='radio' class='monthly_rule_type_week' name='monthly_rule_type' id='monthly_rule_type_week' value='true' /></span>
-              </p>
-              <p class='rs_calendar_day'></p>
-              <p class='rs_calendar_week'></p>
-            </div>
-            <div class='yearly_options freq_option_section'>
-              <p>
-                #{$.fn.recurring_select.texts["every"]}
-                <input type='text' data-wrapper-class='ui-recurring-select' name='rs_yearly_interval' class='rs_yearly_interval rs_interval' value='1' size='2' />
-                #{$.fn.recurring_select.texts["years"]}
-              </p>
-            </div>
+            </div>"
+      str += "
             <p class='rs_summary'>
               <span></span>
             </p>
