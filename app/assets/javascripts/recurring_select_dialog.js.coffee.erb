@@ -108,7 +108,7 @@ window.RecurringSelectDialog =
       else
         base_minute = @current_rule.hash.validations.minute_of_hour[0]
       section.find('.rs_hour_interval').prop('selectedIndex', base_hour)
-      section.find('.rs_minute_interval').prop('selectedIndex', base_minute)
+      section.find('.rs_minute_interval').prop('selectedIndex', base_minute/5)
       #interval_input.on "change keyup", @intervalChanged
       section.on 'change', '.rs_hour_interval', @hourChanged
       section.on 'change', '.rs_minute_interval', @hourChanged
