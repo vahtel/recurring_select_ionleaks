@@ -72,11 +72,19 @@ module RecurringSelectIonleaks
     end
 
     if params[:validations][:hour_of_day]
-      params[:validations][:hour_of_day] = params[:validations][:hour_of_day].to_i
+      if params[:validations][:hour_of_day].is_a? Array
+        params[:validations][:hour_of_day] = params[:validations][:hour_of_day].to_i
+      else
+        params[:validations][:hour_of_day] = params[:validations][:hour_of_day][0].to_i
+      end
     end
 
     if params[:validations][:minute_of_hour]
-      params[:validations][:minute_of_hour] = params[:validations][:minute_of_hour].to_i
+      if params[:validations][:minute_of_hour].is_a? Array
+        params[:validations][:minute_of_hour] = params[:validations][:minute_of_hour][0].to_i
+      else
+        params[:validations][:minute_of_hour] = params[:validations][:minute_of_hour].to_i
+      end
     end
 
 
