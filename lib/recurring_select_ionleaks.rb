@@ -73,9 +73,9 @@ module RecurringSelectIonleaks
 
     if params[:validations][:hour_of_day]
       if params[:validations][:hour_of_day].is_a? Array
-        params[:validations][:hour_of_day] = params[:validations][:hour_of_day].to_i
-      else
         params[:validations][:hour_of_day] = params[:validations][:hour_of_day][0].to_i
+      else
+        params[:validations][:hour_of_day] = params[:validations][:hour_of_day].to_i
       end
     end
 
