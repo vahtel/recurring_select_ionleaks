@@ -15,8 +15,10 @@ class RecurringSelectMiddleware
       params.symbolize_keys!
       
       if params and params[:rule_type]
+        clock24 = request.env['HTTP_X_CLOCK24']
+        
         rule = RecurringSelectIonleaks.dirty_hash_to_rule(params)
-        [200, {"Content-Type" => "text/html"}, [RecurringSelectIonleaks.clean_english_rule(rule)]]
+        [200, {"Content-Type" => "text/html"}, [RecurringSelectIonleaks.clean_english_rule(rule,clock24)]]
       else
         [200, {"Content-Type" => "text/html"}, [""]]
       end

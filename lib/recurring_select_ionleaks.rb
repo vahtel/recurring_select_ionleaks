@@ -4,6 +4,7 @@ require "ice_cube"
 module RecurringSelectIonleaks
 
   def self.dirty_hash_to_rule(params)
+      
     if params.is_a? IceCube::Rule
       params
     else
@@ -19,8 +20,14 @@ module RecurringSelectIonleaks
     end
   end
 
-  def self.clean_english_rule(rule)
-    hour = convert_to_am_or_pm(rule.validations[:hour_of_day].try(:first).try(:hour) || 0)
+  def self.clean_english_rule(rule,clock24)
+    
+    if clock24.to_b
+      hour = (rule.validations[:hour_of_day].try(:first).try(:hour) || 0)
+    else
+      hour = convert_to_am_or_pm(rule.validations[:hour_of_day].try(:first).try(:hour) || 0)
+    end
+    
     minute = format('%02d', rule.validations[:minute_of_hour].try(:first).try(:minute) || 0)
 
     split_time_string = rule.to_s.split(/on the \d(th|rd|st|nd) hour/)
@@ -28,8 +35,16 @@ module RecurringSelectIonleaks
       split_time_string = rule.to_s.split(/on the \d\d(th|rd|st|nd) hour/)
     end
     beginning_of_string = split_time_string.try(:first)
-
-    return "#{beginning_of_string} at #{hour[0]}:#{minute}#{hour[1]}"
+    
+    if clock24.to_b
+      if hour < 10
+        hour = "0"+hour.to_s unless hour == 0
+      end  
+      return "#{beginning_of_string} at #{hour} hours"
+      
+    else
+      return "#{beginning_of_string} at #{hour[0]}#{hour[1]}"
+    end  
   end
 
   def self.is_valid_rule?(possible_rule)
