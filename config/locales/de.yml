@@ -1,0 +1,11 @@
+de:
+  recurring_select:
+    not_recurring: "- nicht wiederkehrend -"
+    change_schedule: "Wiederholung ändern..."
+    set_schedule: "Wiederholung festlegen..."
+    new_custom_schedule: "Neue Wiederholung..."
+    custom_schedule: "Eigene Wiederholung..."
+    or: oder
+    at_hour_24: "%{rule} um %{hour} Uhr"
+    at_time_12: "%{rule} um %{time}"
+    time_12: "%{hour} %{meridiem}"

@@ -6,3 +6,6 @@ fr:
     new_custom_schedule: "Nouvelle récurrence..."
     custom_schedule: "Récurrence personnalisée..."
     or: ou
+    at_hour_24: "%{rule} à %{hour} h"
+    at_time_12: "%{rule} à %{time}"
+    time_12: "%{hour} %{meridiem}"

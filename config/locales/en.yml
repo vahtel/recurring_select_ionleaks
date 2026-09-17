@@ -6,3 +6,8 @@ en:
     new_custom_schedule: "New custom schedule..."
     custom_schedule: "Custom schedule..."
     or: or
+    # The recurrence description and its time of day. The English wording is unchanged
+    # from when it was hardcoded inside clean_english_rule.
+    at_hour_24: "%{rule} at %{hour} hours"
+    at_time_12: "%{rule} at %{time}"
+    time_12: "%{hour}%{meridiem}"

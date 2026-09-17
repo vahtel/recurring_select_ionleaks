@@ -20,31 +20,60 @@ module RecurringSelectIonleaks
     end
   end
 
-  def self.clean_english_rule(rule,clock24)
-    
-    if clock24.to_b
-      hour = (rule.validations[:hour_of_day].try(:first).try(:hour) || 0)
-    else
-      hour = convert_to_am_or_pm(rule.validations[:hour_of_day].try(:first).try(:hour) || 0)
-    end
-    
-    minute = format('%02d', rule.validations[:minute_of_hour].try(:first).try(:minute) || 0)
+  # Human description of a rule, in the CURRENT I18n locale.
+  #
+  # ice_cube localises `rule.to_s` (it ships de/es/fr/it/ja/nl/pt-BR/ru/sv), but the hour and
+  # minute validations come back as a clause the caller does not want ("... on the 9th hour of
+  # the day on the 0th minute of the hour"). This used to be cut off with an English regex and
+  # replaced by a hardcoded English "at N hours", so any other locale kept its own hour clause
+  # AND gained an English one.
+  #
+  # Instead of cutting the clause out of the sentence, describe a rule that never had it: the
+  # time is read from the validations and rendered separately through I18n. Nothing here is
+  # language-specific any more.
+  def self.clean_rule_text(rule, clock24)
+    hour_of_day = rule.validations[:hour_of_day].try(:first).try(:hour) || 0
+    schedule    = rule_without_time_of_day(rule).to_s
 
-    split_time_string = rule.to_s.split(/on the \d(th|rd|st|nd) hour/)
-    if split_time_string.count == 1
-      split_time_string = rule.to_s.split(/on the \d\d(th|rd|st|nd) hour/)
-    end
-    beginning_of_string = split_time_string.try(:first)
-    
     if clock24.to_b
-      if hour < 10
-        hour = "0"+hour.to_s unless hour == 0
-      end  
-      return "#{beginning_of_string} at #{hour} hours"
-      
+      # Zero-padded except midnight - that is what this has always printed.
+      hour = hour_of_day
+      hour = "0" + hour.to_s if hour < 10 && hour != 0
+      I18n.t("recurring_select.at_hour_24",
+             rule: schedule, hour: hour, default: "%{rule} at %{hour} hours")
     else
-      return "#{beginning_of_string} at #{hour[0]}#{hour[1]}"
-    end  
+      digit, meridiem = convert_to_am_or_pm(hour_of_day)
+      # The am/pm marker is itself wording: rails-i18n carries time.am / time.pm, and a host
+      # app may have narrowed them (Breeze uses "vorm." / "nachm."). English keeps "9am" with
+      # no space; the other locales separate the two, hence a format key rather than concat.
+      meridiem = I18n.t("time.#{meridiem}", default: meridiem)
+      time = I18n.t("recurring_select.time_12",
+                    hour: digit, meridiem: meridiem, default: "%{hour}%{meridiem}")
+      I18n.t("recurring_select.at_time_12",
+             rule: schedule, time: time, default: "%{rule} at %{time}")
+    end
+  end
+
+  # Kept so an older caller does not break; the name was only ever accurate for English.
+  def self.clean_english_rule(rule, clock24)
+    clean_rule_text(rule, clock24)
+  end
+
+  # The same rule with the time-of-day validations removed, so `to_s` describes the recurrence
+  # alone. Falls back to the original rule if the round-trip through the hash fails.
+  def self.rule_without_time_of_day(rule)
+    hash        = rule.to_hash
+    validations = hash[:validations] || hash["validations"]
+    return rule if validations.nil?
+
+    validations = validations.dup
+    [:hour_of_day, :minute_of_hour, :second_of_minute].each do |key|
+      validations.delete(key)
+      validations.delete(key.to_s)
+    end
+    IceCube::Rule.from_hash(hash.merge(validations: validations))
+  rescue StandardError
+    rule
   end
 
   def self.is_valid_rule?(possible_rule)

@@ -1,0 +1,11 @@
+es:
+  recurring_select:
+    not_recurring: "- sin repetición -"
+    change_schedule: "Cambiar la repetición..."
+    set_schedule: "Definir la repetición..."
+    new_custom_schedule: "Nueva repetición..."
+    custom_schedule: "Repetición personalizada..."
+    or: o
+    at_hour_24: "%{rule} a las %{hour} h"
+    at_time_12: "%{rule} a las %{time}"
+    time_12: "%{hour} %{meridiem}"

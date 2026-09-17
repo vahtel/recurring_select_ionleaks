@@ -6,3 +6,6 @@ nl:
     new_custom_schedule: "Nieuw aangepast rooster..."
     custom_schedule: "Aangepast rooster..."
     or: of
+    at_hour_24: "%{rule} om %{hour} uur"
+    at_time_12: "%{rule} om %{time}"
+    time_12: "%{hour} %{meridiem}"
